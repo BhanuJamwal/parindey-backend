@@ -1,12 +1,12 @@
 
 const config ={
     db :{
-        username:'admin',
-        password:'adminpassword',
+        username:'postgres',
+        password:'postgres',
         host:'127.0.0.1',
-        port: '27017',
-        database:'demo',
-        table:'employee'
+        port: '5432',
+        database:'userdb',
+        table:'Users'
     }
 }
 
