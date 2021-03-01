@@ -1,6 +1,6 @@
 const {Sequelize, DataTypes, Op} = require('sequelize');
 const config = require('./config');
-
+const path = require('path');
 const info = config;
 
 const url = `postgres://${info.db.username}:${info.db.password}@${info.db.host}:${info.db.port}/${info.db.database}`;
@@ -31,6 +31,12 @@ class PostgresOperations {
                 empid: id
             }
         });
+    }
+    async readOne(res,id){
+        const selected_user = await user.findAll({where:{empid:id}});
+        var orig_user = selected_user[0].dataValues;
+        console.log(orig_user.name,orig_user.age, orig_user.occupation,orig_user.empid);
+        res.render(path.join(__dirname, "templates", "update.html"), { name:orig_user.name,age:orig_user.age,occupation:orig_user.occupation,empid:orig_user.empid});
     }
 }
 module.exports = PostgresOperations; 

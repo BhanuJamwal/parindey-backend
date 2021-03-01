@@ -77,6 +77,20 @@ class MongoOperations {
             });
         });
     }
+    readSingleMongo(res,id) {
+        MongoClient.connect(url, (err, client) => {
+            const db = client.db(info.db.database);
+            db.collection(info.db.table).find({where:{id:id}}).toArray().then((result) => {
+                if (err) {
+                    throw err;
+                } else {
+                    console.log(result);
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.sendFile(path.join(__dirname, "templates", "update.html"), {user:json.stringify({result:result})})
+                }
+            });
+        });
+    }
     
 }
 module.exports = MongoOperations;

@@ -8,18 +8,27 @@ const deleteJson = require("./delete");
 var bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+const PostgresOperations = require('./PostgresOperations');
+const { db } = require('./config');
+const { Router } = require('express');
+app.use(express.static(__dirname + '/templates'));
+app.set('views', __dirname);
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname,'templates','home.html'))
+    res.sendFile(path.join(__dirname,'templates','home.html'),{title:'hey you'})
 
 });
 app.get('/create', (req, res) =>{
     res.sendFile(path.join(__dirname,"templates","create.html"))
 });
-app.get('/update', (req, res) => {
-    res.sendFile(path.join(__dirname,"templates","update.html"))
+app.get('/update/:empid', (req, res) => {
+    var db = new PostgresOperations();
+    db.readOne(res,req.params.empid);
+    //res.sendFile(path.join(__dirname,"templates","update.html"))
 });
 app.post('/createForm', (req, res) =>{
     console.log("request"+ req.body.name);
@@ -34,13 +43,13 @@ app.post('/updateForm',(req, res) => {
 app.get('/read', (req, res) =>{
     readData(res);
 });
-app.get('/delete', (req, res) =>{
-    res.sendFile(path.join(__dirname,"templates","delete.html"))
+app.get('/delete/:id', (req, res) =>{
+    deleteJson(req.params.id)
+    //res.sendFile(path.join(__dirname,"templates","delete.html"))
+    res.sendFile(path.join(__dirname, "templates", "file.html"))
 });
-app.post('/deleteForm', (req, res) => {
-    deleteJson(req.body.empid);
-    res.sendFile(path.join(__dirname,"templates","file.html"))
-})
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 
