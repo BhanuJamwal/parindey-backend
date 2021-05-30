@@ -7,21 +7,39 @@ var readData = require("./read");
 const deleteJson = require("./delete");
 var bodyParser = require('body-parser');
 const express = require('express');
+
 const app = express();
 const PostgresOperations = require('./PostgresOperations');
-const { db } = require('./config');
-const { Router } = require('express');
+const  db  = require('./config/database');
+const authRoutes = require("./api/auth/routes");
+const packageRoutes = require("./api/packages/routes");
+const authenticateToken = require("./api/auth/middleware/LoginRequired");
+//const {inwardBatchCronJob} = require("./domain/services/InwardCronJobForHoldTillDate");
+
+const DbRelation = require('./databaseOperations/DbRelation');
 app.use(express.static(__dirname + '/templates'));
+
 app.set('views', __dirname);
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
 
-app.get('/', (req, res) => {
+new DbRelation().createAssociation()
+
+//inwardBatchCronJob.start()
+
+
+app.use('/auth', authRoutes);
+app.use('/home', packageRoutes);
+
+app.get('/', authenticateToken,(req, res) => {
     res.sendFile(path.join(__dirname,'templates','home.html'),{title:'hey you'})
 
 });
+//app.use('/auth', authRoutes);
+
 app.get('/create', (req, res) =>{
     res.sendFile(path.join(__dirname,"templates","create.html"))
 });
@@ -50,6 +68,6 @@ app.get('/delete/:id', (req, res) =>{
 });
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8001;
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 
