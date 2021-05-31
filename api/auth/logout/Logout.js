@@ -1,3 +1,4 @@
+/*
 const TokenModel = require("../../../schema/TokenModel");
 
 
@@ -16,3 +17,5 @@ class Logout {
     }
 }
 module.exports = Logout;
+*/
+// ** will manage with react-redux 

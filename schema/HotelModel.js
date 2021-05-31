@@ -13,11 +13,11 @@ const hotelModel = db.define('hotel', {
         allowNull: false
     },
     type: {
-        type: Sequelize.NUMBER,
+        type: Sequelize.INTEGER,
         allowNull: false
     },
     levelOfStar: {
-        type: Sequelize.NUMBER
+        type: Sequelize.INTEGER
     },
     location: {
         type: Sequelize.STRING,
