@@ -7,6 +7,7 @@ var readData = require("./read");
 const deleteJson = require("./delete");
 var bodyParser = require('body-parser');
 const express = require('express');
+const cors = require("cors");
 
 const app = express();
 const PostgresOperations = require('./PostgresOperations');
@@ -18,7 +19,7 @@ const authenticateToken = require("./api/auth/middleware/LoginRequired");
 
 const DbRelation = require('./databaseOperations/DbRelation');
 app.use(express.static(__dirname + '/templates'));
-
+app.use(cors())
 app.set('views', __dirname);
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
